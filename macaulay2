@@ -1,0 +1,68 @@
+pointsCollide = (X,pts) -> sum (for p in drop(pts,1) list minors (2,submatrix(X,{first pts, p})))
+
+anyPointsCollide = (X,k) -> intersect (for pts in subsets(numcols X,k) list pointsCollide(X,pts))
+
+collinear = (X,pts) -> minors (3,submatrix (X,pts))
+
+anyCollinear = (X,k) -> intersect (for pts in subsets(numcols X,k) list collinear(X,pts))
+
+unstableLocus = (X,m,n) -> intersect(anyPointsCollide (X,m), anyCollinear(X,n))
+
+linesIdeal = (X,L) -> sum apply(L,l->collinear(X,l))
+
+charts = frame -> (
+i's := j -> if any(frame,k->k==j) then {{0}} else {{0},{1},{2}};
+chartRecurse = j -> (
+if j == 0 then i's(j)
+else flatten apply(chartRecurse(j-1),c -> for i in i's(j) list c|i)
+);
+chartRecurse(9)
+)
+
+realizationSpace = (L,R,frame,chart) -> (
+	standard := {{1,0,0},{0,1,0},{0,0,1},{1,1,1}};
+	k:=0;
+	X = matrix table(3,10,(i,j) -> ( 
+		if any(frame,l->l==j) then standard#(position(frame,l->l==j))#i 
+		else if i == chart#j then 1
+		else (k=k+1;R_(k-1))
+		)
+	);
+	S := R/linesIdeal(X,L);
+	(S,sub(X,S))
+)
+
+fcdata = (L,R,frame,chart) -> (
+(S,X) := realizationSpace(L,R,frame,chart);
+d := dim S;
+if d < 0 then "empty" else (
+irred := isPrime ideal S;
+sing := sub(ideal singularLocus ideal mingens ideal S,S);
+uns := unstableLocus(X,4,7);
+sm := isSubset(uns,sing) or isSubset(uns,radical sing);
+(d,irred,sm)
+)
+)
+
+writeData = (L,R,fcs,filename) -> (
+data := for fc in fcs list (entry := (fc,fcdata splice (L,R,fc)); print entry; entry);
+if fileExists(filename) then (file := openOutAppend(filename); file << "|" << data << close)
+else filename << data << close
+);
+
+writeBatches = {Size => 100} >> o -> (L,R,fcs,filename,batches) -> (
+start := if fileExists(filename) then (#value get filename) else 0;
+for i from 0 to batches-1 do (
+print (start + i*o.Size); 
+writeData(L,R,take(fcs,{start+i*o.Size,start+(i+1)*o.Size-1}),filename);
+collectGarbage()
+)
+)
+
+allfcs = flatten apply(subsets(10,4),f -> for c in charts(f) list (f,c));
+
+writeSturmfels = (batches) -> (
+L1 := {{1,2,4},{1,3,8},{1,7,9},{2,3,7},{2,5,9},{3,5,0},{4,5,6},{4,8,0},{6,7,8},{6,9,0}};
+R := (ZZ/65357)[x_1..x_12];
+writeBatches(L1,R,allfcs,"sturmfelsdata",batches)
+)

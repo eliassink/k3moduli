@@ -1,19 +1,19 @@
 K<t> := FunctionField(RationalField());
 KP2<a,b,c> := ProjectiveSpace(K,2);
-f := t^2*a^2*c - t*a^2*c - b^3 + t*b^2*c \
+f := t^2*a^2*c - t*a^2*c - b^3 + t*b^2*c \   //Sturmfels' equation, t=u/v
 + a*b^2 - t*a*b*c + t*a*c^2 - t^2*a*c^2;
 C := Curve(KP2,f);
 E,phi := EllipticCurve(C,C![1,1,1]);
 s2 := phi(C![1,t,t]);
 s3 := phi(C![1,1,0]);
 
-E;
-s2;
+E;                                         //Weierstrass form for E
+s2;                                        //Formulas for sections s2 and s3
 s3;
-Order(s2);
+Order(s2);                                 //Their orders (both 0, i.e., infinity)
 Order(s3);
-KodairaSymbols(E);
+KodairaSymbols(E);                         //The Kodaira fibers of our K3 surface
 MWtors := TorsionSubgroup(E);
-MWtors;
-HeightPairing(s2,s2);
-IsIsomorphic(EllipticCurve([t,-(t-1)^2*t,-(t-1)^2*t^2,0,0]),E);
+MWtors;                                    //The torsion subgroup of the Mordell-Weil group, Z/4
+HeightPairing(s2,s2);                      //The height pairing required to compute the regulator in Thm. 1.1(iii), 7/8
+IsIsomorphic(EllipticCurve([t,-(t-1)^2*t,-(t-1)^2*t^2,0,0]),E); //Sanity check, cf. row 2 of Table 3 in [Lec15]

@@ -11,15 +11,17 @@ E1,e1 := EllipticCurve(E,o);                 //generic fiber of S', isomorphic t
 s2 := e1(s0);                                //s1=s2 and s3 from the proof of Thm 1.1(i)
 s3 := e1(E![1,1,0]);
 
+IsNonSingular(E);                            //Generic fiber is smooth
+
 E1;                                          //Weierstrass form
 s2;                                          //Formulas for sections s2 and s3 in S'
 s3;
 Order(s2);                                   //Their orders (both 0, i.e., infinity)
 Order(s3);
+
 KodairaSymbols(E1);                          //The Kodaira fibers of our K3 surface
 MWtors := TorsionSubgroup(E1);
 MWtors;                                      //The torsion subgroup of the Mordell-Weil group, Z/4
 HeightPairing(s2,s2);                        //The height pairing required to compute the regulator in Thm. 1.1(iii), 7/8
 
-//Sanity check, cf. row 2 of Table 3 in [Lec15]
-IsIsomorphic(EllipticCurve([t,-(t-1)^2*t,-(t-1)^2*t^2,0,0]),E1); 
+IsIsomorphic(EllipticCurve([t,-(t-1)^2*t,-(t-1)^2*t^2,0,0]),E1);  //Sanity check, cf. row 2 of Table 3 in [Lec15]

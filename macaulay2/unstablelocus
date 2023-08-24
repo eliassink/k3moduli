@@ -8,7 +8,7 @@ anyCollinear = (X,k) -> intersect (for pts in subsets(numcols X,k) list collinea
 
 unstableLocus = X -> (
 	m := (numcols X - 1) // 3 + 1;
-	n := 2 * (numcols X - 1) // 3 + 1;
+	n :=  (2 * numcols X - 1) // 3 + 1;
 	intersect(anyPointsCollide (X,m), anyCollinear(X,n))
 )
 

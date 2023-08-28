@@ -1,3 +1,14 @@
+--The following code is used to prove that the democratic GIT quotient V_1 is smooth of dimension 2.
+--V_1 is covered by subsets U_i of (PP^2)^6 indexed by subsets i={i_1,...,i_4} of
+--{0,...,9}. Each point of U_i corresponds to an arrangement with points i_1,...,i_4
+--at 1:0:0, 0:1:0, 0:0:1, and 1:1:1, respectively, subject to the collinearities defining
+--the configuration and the democratic stability condition. We prove smoothness of U_i by 
+--checking in each standard affine chart of (PP^2)^6 that the singular locus of the variety 
+--defined by the collinearities is contained in the locus of unstable arrangements. We also
+--check that this variety (hence U_i) is irreducible. Each U_i is either empty or contains the
+--entire realization space R_1; a union of pairwise-intersecting irreducible open subsets is 
+--connected, and smooth and connected implies irreducible.
+
 pointsCollide = (X,pts) -> sum (for p in drop(pts,1) list minors (2,submatrix(X,{first pts, p})))
 
 anyPointsCollide = (X,k) -> intersect (for pts in subsets(numcols X,k) list pointsCollide(X,pts))
@@ -14,7 +25,7 @@ unstableLocus = X -> (
 
 linesIdeal = (X,L) -> sum apply(L,l->collinear(X,l))
 
-Vchart = (L,R,frame,chart) -> (
+Uchart = (L,R,frame,chart) -> (
 	standard := {{1,0,0},{0,1,0},{0,0,1},{1,1,1}};
 	k:=0;
 	X = matrix table(3,10,(i,j) -> 

@@ -11,4 +11,4 @@ PrimeComponents(SingularSubscheme(S)); //singular points of S
 fa := Derivative(f,a);
 fb := Derivative(f,b);
 fc := Derivative(f,c);
-PrimeComponents(Scheme(P1xP2,f)); //singular points of fibers
+PrimeComponents(Scheme(P1xP2,[fa,fb,fc])); //singular points of fibers

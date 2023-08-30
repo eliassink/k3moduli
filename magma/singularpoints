@@ -6,13 +6,9 @@ P1xP2<u,v,a,b,c> := DirectProduct(P1,P2);
 f := u^2*a^2*c - u*v*a^2*c - v^2*b^3 + u*v*b^2*c \
 + v^2*a*b^2 - u*v*a*b*c + u*v*a*c^2 - u^2*a*c^2;
 S := Scheme(P1xP2,f);
-PrimeComponents(SingularSubscheme(S)); 
+PrimeComponents(SingularSubscheme(S)); //singular points of S
 
-//This returns a list of seven schemes representing the singular points
-//(1:1,1:1:1), (1:1,0:0:1), (1:1,1:0:0), 
-//(0:1,1:0:1), (0:1,0:0:1), (0:1,1:0:0), 
-//(1:0,0:1:0)
-//Recall that the first two coordinates represent the position of point 7.
-//The first three have 1,5,7 collinear, the middle three have 1,3,7 collinear,
-//and the last three have 1,2,7 collinear, so none can be a realization of L1
-//It follows that R1 is smooth
+fa := Derivative(f,a);
+fb := Derivative(f,b);
+fc := Derivative(f,c);
+PrimeComponents(Scheme(P1xP2,f)); //singular points of fibers

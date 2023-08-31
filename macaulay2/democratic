@@ -34,7 +34,7 @@ projectiveFrame = {Field => ZZ/65357} >> o -> (n,i's) -> (
                 if any(i's,k->k==i)
                 then standard#(position(i's,k->k==i))#j
                 else R_(3*(i-number(i's,k->k<i))+j)
-        );
+        )
 )
 
 affineCharts = {Field => ZZ/65357} >> o -> (n,i's) -> (
@@ -50,7 +50,7 @@ affineCharts = {Field => ZZ/65357} >> o -> (n,i's) -> (
 	for chart in (n-4:0)..(n-4:2) list affineChart(chart)
 )
 
-stableIsSmooth = -> (P,L) -> (
+stableIsSmooth = (P,L) -> (
 	I := linesIdeal(P,L);
 	1 % I == 0 or (
 		S := singularLocus linesIdeal(P,L); --singular locus of X_i

@@ -83,6 +83,7 @@ allIrreducible = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
 allSmooth = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
 	n := #unique(flatten L);
 	all (subsets(n,4), i's->(
+		if o.Verbose then print i's;
 		sm := all(affineCharts(n,i's,Field=>o.Field),P->stableIsSmooth(P,L));
 		if o.Verbose then print sm;
 		sm

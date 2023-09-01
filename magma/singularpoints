@@ -1,7 +1,7 @@
 //Compute the singular locus of S
 k<r> := QuadraticField(-7);
-P1 := ProjectiveSpace(QuadraticField(-7),1);
-P2 := ProjectiveSpace(QuadraticField(-7),2);
+P1 := ProjectiveSpace(k,1);
+P2 := ProjectiveSpace(k,2);
 P1xP2<u,v,a,b,c>,pi := DirectProduct(P1,P2);
 f := u^2*a^2*c - u*v*a^2*c - v^2*b^3 + u*v*b^2*c \
 + v^2*a*b^2 - u*v*a*b*c + u*v*a*c^2 - u^2*a*c^2;

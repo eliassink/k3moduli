@@ -22,7 +22,8 @@ unstableLocus = P -> (
 	intersect(anyPointsCollide (P,k), anyCollinear(P,m))
 )
 
---For L a list of subsets of {0,...,n}, ideal that those subsets of points are collinear
+--For L a list of subsets of {0,...,n}, returns the ideal that those subsets of points are collinear
+--When P is a projectiveFrame, this is the ideal of the variety X_i
 linesIdeal = (P,L) -> sum apply(L,l->collinear(P,l))
 
 --returns a 3 x n matrix with coefficients in the coordinate ring of (PP^2)^(n-4)
@@ -37,6 +38,8 @@ projectiveFrame = {Field => ZZ/65357} >> o -> (n,i's) -> (
         )
 )
 
+--Returns a list of 3 x n matrices, each representing the restriction of
+--projectiveFrame(n,i's) to a standard affine chart of (PP^2)^(n-4)
 affineCharts = {Field => ZZ/65357} >> o -> (n,i's) -> (
 	P := projectiveFrame(n,i's,Field=>o.Field);
 	R := ring P;
@@ -50,6 +53,8 @@ affineCharts = {Field => ZZ/65357} >> o -> (n,i's) -> (
 	for chart in (n-4:0)..(n-4:2) list affineChart(chart)
 )
 
+--when P is one of the matrices returned by affineCharts and L is a list of subsets of {0,...,n},
+--returns true if the singular locus of the corresponding affine chart of X_i is smooth
 stableIsSmooth = (P,L) -> (
 	I := linesIdeal(P,L);
 	1 % I == 0 or (
@@ -59,6 +64,8 @@ stableIsSmooth = (P,L) -> (
 	)
 )
 
+--Checks that all X_i's are either empty or irreducible.
+--Verbose => true prints each frame with the number of components
 allIrreducible = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
 	n := #unique(flatten L);
 	all (subsets(n,4), i's->(
@@ -71,6 +78,8 @@ allIrreducible = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
 	)
 )
 
+--Checks that stableIsSmooth returns true for every frame and chart
+--This is a taxing computation even for n=10, and sometimes crashes
 allSmooth = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
 	n := #unique(flatten L);
 	all (subsets(n,4), i's->(

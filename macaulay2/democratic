@@ -81,6 +81,7 @@ allIrreducible = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
 --Checks that stableIsSmooth returns true for every frame in frames and every
 --affine chart. 
 frameSmooth = {Field=>ZZ/65357} >> o -> (L,i's) -> (
+	n := #unique(flatten L);
 	sm := all(affineCharts(n,i's,Field=>o.Field),P->stableIsSmooth(P,L))
 )
 

@@ -1,3 +1,4 @@
+dismiss "Elimination" --avoid shadowing warning
 loadPackage "MultiprojectiveVarieties"
 
 --Throughout, P denotes a 3 x n matrix, representing a (family of) arrangements of n points in PP^2

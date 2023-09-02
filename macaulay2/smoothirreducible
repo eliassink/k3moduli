@@ -16,8 +16,8 @@ allFrames = subsets(#unique flatten L1,4);
 all(for frameNumber from 0 to #allFrames list(
   i's := allFrames#frameNumber;
   print("Frame " | frameNumber | "/" | #allFrames | ":" | toString(i's));
-  command := "if frameSmooth(" | toString(L1) | "," | toString(i's) | ") then exit 0 else exit 1";
-  sm := run(M2exec | " -e '" | command | "' democratic");
+  command := "load democratic; if frameSmooth(" | toString(L1) | "," | toString(i's) | ") then exit 0 else exit 1";
+  sm := run(M2exec | " -e '" | command | "'");
   print(if sm == 0 then true else false);
   sm
 ),identity)

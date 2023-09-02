@@ -11,6 +11,10 @@ S := Surface(P1xP2,f);
 "([0:1],[1:0:1]),([0:1],[0:0:1]),([0:1],[1:0:0]),([1:0],[0:1:0]).";
 PrimeComponents(SingularSubscheme(S)); //singular points of S
 
+
+"\nS has only du Val singularities?";
+HasOnlySimpleSingularities(S);
+
 "\nDu Val types of each singular point:";
 S![1,1,1,1,1];
 IsSimpleSurfaceSingularity(S![1,1,1,1,1]);

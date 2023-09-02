@@ -12,5 +12,5 @@ thisFile = commandLine#1 --the name of this file;
 
 if frameNumber == #allFrames then true else (
 print(frameNumber); if frameSmooth(L1,allFrames#n) 
-                    then exec(M2exec | "-E \'frameNumber = " | toString(frameNumber+1) | "\' " | thisFile) else false
+                    then exec(M2exec | "-E 'frameNumber = " | toString(frameNumber+1) | "' " | thisFile) else false
 )

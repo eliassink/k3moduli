@@ -11,7 +11,7 @@ M2exec = commandLine#0 --executable name;
 thisFile = commandLine#1 --the name of this file;
 
 if frameNumber == #allFrames then true else (
-  print("Frame "| toString(frameNumber) | "/" | toString(#allFrames) |":" | toString(allFrames#frameNumber)); 
+  print("Frame "| toString(frameNumber+1) | "/" | toString(#allFrames) |":" | toString(allFrames#frameNumber)); 
   if frameSmooth(L1,allFrames#frameNumber) 
                     then exec(M2exec | "-E 'frameNumber = " | toString(frameNumber+1) | "' " | thisFile) else false
 )

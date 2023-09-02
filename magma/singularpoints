@@ -5,11 +5,27 @@ P2 := ProjectiveSpace(k,2);
 P1xP2<u,v,a,b,c>,pi := DirectProduct(P1,P2);
 f := u^2*a^2*c - u*v*a^2*c - v^2*b^3 + u*v*b^2*c \
 + v^2*a*b^2 - u*v*a*b*c + u*v*a*c^2 - u^2*a*c^2;
-S := Scheme(P1xP2,f);
+S := Surface(P1xP2,f);
 "Singualar points of S with coordinates ([u:v],[a:b:c]).";
 "They are ([1:1],[1:1:1]),([1:1],[0:0:1]),([1:1],[1:0:0]),";
 "([0:1],[1:0:1]),([0:1],[0:0:1]),([0:1],[1:0:0]),([1:0],[0:1:0]).";
 PrimeComponents(SingularSubscheme(S)); //singular points of S
+
+"\nDu Val types of each singular point:";
+S![1,1,1,1,1];
+IsSimpleSurfaceSingularity(S![1,1,1,1,1]);
+S![1,1,0,0,1];
+IsSimpleSurfaceSingularity(S![1,1,0,0,1]);
+S![1,1,1,0,0];
+IsSimpleSurfaceSingularity(S![1,1,1,0,0]);
+S![0,1,1,0,1];
+IsSimpleSurfaceSingularity(S![0,1,1,0,1]);
+S![0,1,0,0,1];
+IsSimpleSurfaceSingularity(S![0,1,0,0,1]);
+S![0,1,1,0,0];
+IsSimpleSurfaceSingularity(S![0,1,1,0,0]);
+S![1,0,0,1,0];
+IsSimpleSurfaceSingularity(S![1,0,0,1,0]);
 
 fa := Derivative(f,a);
 fb := Derivative(f,b);

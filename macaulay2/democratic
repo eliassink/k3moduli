@@ -90,7 +90,7 @@ frameSmooth = {Field=>ZZ/65357} >> o -> (L,i's) -> (
 --overflows that counter. To prevent this, we create a new Macaulay2 process for each frame,
 --which resets the counter. The result for that frame is passed back to the parent process
 --via exit code. (This is undoubtably a bit of a hack.)
-allSmooth = {Pause=>false} >> o -> (L) -> (
+allSmooth = {Debug=>false} >> o -> (L) -> (
 	M2exec := commandLine#0; --name of M2 executable
 	allFrames := subsets(#unique flatten L1,4);
 	all(for frameNumber from 0 to #allFrames-1 list(
@@ -102,8 +102,9 @@ allSmooth = {Pause=>false} >> o -> (L) -> (
 		command := "load \"democratic\"; if frameSmooth(" | toString(L1) | "," | toString(i's) | 
 			") then (print true; exit 0) else (print false;exit 1)";
 
+		if o.Debug then print(command);
 		sm := run(M2exec | " -e '" | command | "'"); --run the computation in the child process, keep the exit code
-		if o.Pause then (print("Next frame begins in 3 seconds");sleep(3);); --pause between frames to allow interrupt
+		if o.Debug then (print("Next frame begins in 3 seconds");sleep(3);); --pause between frames to allow interrupt
 		if sm == 0 then true else false
 	),identity)
 )

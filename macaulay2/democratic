@@ -79,11 +79,36 @@ allIrreducible = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
 	)
 )
 
---Checks that stableIsSmooth returns true for every frame in frames and every
---affine chart. 
+--Checks that stableIsSmooth returns true for every affine chart of the frame i's
 frameSmooth = {Field=>ZZ/65357} >> o -> (L,i's) -> (
 	n := #unique(flatten L);
 	sm := all(affineCharts(n,i's,Field=>o.Field),P->stableIsSmooth(P,L))
 )
 
+--Checks that frameSmooth returns true for all frames.
+--Becaues of Macaulay2 hashes mutable objects by incrementing a counter, creating too many rings
+--overflows that counter. To prevent this, we create a new Macaulay2 process for each frame,
+--which resets the counter. The result for that frame is passed back to the parent process
+--via exit code. (This is undoubtably a bit of a hack.)
+allSmooth = {Pause=>false} >> o -> (L) -> (
+	M2exec := commandLine#0 --name of M2 executable
+	allFrames = subsets(#unique flatten L1,4);
+	all(for frameNumber from 0 to #allFrames-1 list(
+		i's := allFrames#frameNumber;
+		print("\n\nFrame " | frameNumber | "/" | #allFrames | ":" | toString(i's) | "\n\n");
+
+		--the command to run in the child process:
+		--load "democratic"; if frameSmooth(L1,i's) then (print true; exit 0) else (print false; exit 1)
+		command := "load \"democratic\"; if frameSmooth(" | toString(L1) | "," | toString(i's) | 
+			") then (print true; exit 0;) else (print false;exit 1)";
+
+		sm := run(M2exec | " -e '" | command | "'"); --run the computation in the child process, keep the exit code
+		if o.Pause then (print("Next frame begins in 3 seconds");sleep(3);) --pause between frames to allow interrupt
+		if sm == 0 then true else false
+	),identity)
+)
+
 L1 := {{1,2,4},{1,3,8},{1,7,9},{2,3,7},{2,5,9},{3,5,0},{4,5,6},{4,8,0},{6,7,8},{6,9,0}}
+
+--allIrreducible(L1);
+--allSmooth(L1);

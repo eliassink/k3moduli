@@ -95,7 +95,7 @@ allSmooth = {Pause=>false} >> o -> (L) -> (
 	allFrames := subsets(#unique flatten L1,4);
 	all(for frameNumber from 0 to #allFrames-1 list(
 		i's := allFrames#frameNumber;
-		print("\n\nFrame " | frameNumber | "/" | #allFrames | ":" | toString(i's) | "\n\n");
+		print("\n\nFrame " | (frameNumber+1) | "/" | #allFrames | ":" | toString(i's) | "\n\n");
 
 		--the command to run in the child process:
 		--load "democratic"; if frameSmooth(L1,i's) then (print true; exit 0) else (print false; exit 1)

@@ -100,7 +100,7 @@ allSmooth = {Pause=>false} >> o -> (L) -> (
 		--the command to run in the child process:
 		--load "democratic"; if frameSmooth(L1,i's) then (print true; exit 0) else (print false; exit 1)
 		command := "load \"democratic\"; if frameSmooth(" | toString(L1) | "," | toString(i's) | 
-			") then (print true; exit 0;) else (print false;exit 1)";
+			") then (print true; exit 0) else (print false;exit 1)";
 
 		sm := run(M2exec | " -e '" | command | "'"); --run the computation in the child process, keep the exit code
 		if o.Pause then (print("Next frame begins in 3 seconds");sleep(3);); --pause between frames to allow interrupt

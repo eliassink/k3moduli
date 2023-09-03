@@ -13,7 +13,7 @@ M2exec = commandLine#0 --name of M2 executable
 allFrames = subsets(#unique flatten L1,4);
 
 "All frames smooth:"
-all(for frameNumber from 0 to #allFrames list(
+all(for frameNumber from 0 to #allFrames-1 list(
   i's := allFrames#frameNumber;
   print("\n\nFrame " | frameNumber | "/" | #allFrames | ":" | toString(i's) | "\n\n");
   command := "load \"democratic\"; if frameSmooth(" | toString(L1) | "," | toString(i's) | 

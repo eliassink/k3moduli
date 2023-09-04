@@ -91,24 +91,39 @@ frameSmooth = {Field=>ZZ/65357} >> o -> (L,i's) -> (
 --which resets the counter. The result for that frame is passed back to the parent process
 --via exit code. (This is undoubtably a bit of a hack, but it works.) This routine takes several
 --hours on a standard laptop.
-allSmooth = (L) -> (
+--ThisFile must be the path to this file, so that "load ThisFile" loads this file.
+allSmooth = {ThisFile=>"democratic"} (L) -> (
 	M2exec := commandLine#0; --name of M2 executable
 	allFrames := subsets(#unique flatten L,4);
-	all(for frameNumber from 0 to #allFrames-1 list(
+	#(for frameNumber from 0 to #allFrames-1 list(
 		i's := allFrames#frameNumber;
 		print("\n\nFrame " | (frameNumber+1) | "/" | #allFrames | ":" | toString(i's) | "\n\n");
 
 		--the command to run in the child process:
 		--load "democratic"; if frameSmooth(L,i's) then (print true; exit 0) else (print false; exit 1)
-		command := "load \"democratic\"; if frameSmooth(" | toString(L) | "," | toString(i's) | 
+		command := "load \"" | ThisFile | "\"; if frameSmooth(" | toString(L) | "," | toString(i's) | 
 			") then (print true; exit 0) else (print false;exit 1)";
 
 		sm := run(M2exec | " -e '" | command | "'"); --run the computation in the child process, keep the exit code
-		if sm == 0 then true else false
-	),identity)
+		true)
+	when sm)==#allFrames
 )
 
+
 L1 = {{1,2,4},{1,3,8},{1,7,9},{2,3,7},{2,5,9},{3,5,0},{4,5,6},{4,8,0},{6,7,8},{6,9,0}}
+
+--All 10_3 configurations, per Schroeter 1889. L1 is isomorphic to KV.
+--
+KI    = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,5,8},{2,6,9},{3,7,9},{4,6,0},{5,7,0}} --Desargues
+KII   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,6,9},{3,5,9},{4,6,0},{5,7,0}}
+KIII  = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,6,8},{2,7,9},{3,5,9},{4,6,0},{5,7,0}} 
+KIV   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,6,8},{2,5,9},{3,7,9},{4,6,0},{5,7,0}} --not realizable in char 0
+KV    = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,5,9},{4,6,9},{3,6,0},{5,7,0}}
+KVI   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,6,9},{5,7,9},{3,5,0},{4,6,0}}
+KVII  = {{1,2,3},{1,4,5},{1,6,7},{2,8,9},{4,8,0},{6,9,0},{5,7,8},{3,5,9},{7,3,0},{2,4,6}}
+KVIII = {{1,2,3},{1,4,5},{1,6,7},{3,8,9},{5,8,0},{7,9,0},{2,7,8},{6,5,9},{4,3,0},{2,4,6}}
+KIX   = {{1,2,3},{1,4,5},{1,6,7},{2,8,9},{4,8,0},{6,9,0},{5,7,8},{3,5,9},{2,7,0},{3,4,6}} --Typo in Shroeter p. 222: 279->270
+KX    = {{1,2,3},{1,4,5},{1,6,7},{3,8,9},{2,8,0},{7,9,0},{5,7,8},{6,5,9},{4,3,0},{2,4,6}}
 
 --allIrreducible(L1);
 --allSmooth(L1);

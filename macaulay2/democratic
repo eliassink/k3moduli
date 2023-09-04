@@ -105,8 +105,8 @@ allSmooth = {ThisFile=>"democratic"} (L) -> (
 			") then (print true; exit 0) else (print false;exit 1)";
 
 		sm := run(M2exec | " -e '" | command | "'"); --run the computation in the child process, keep the exit code
-		true)
-	when sm)==#allFrames
+		if sm != 0 then break else true)
+	)==#allFrames
 )
 
 

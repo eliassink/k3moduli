@@ -92,7 +92,7 @@ frameSmooth = {Field=>ZZ/65357} >> o -> (L,i's) -> (
 --via exit code. (This is undoubtably a bit of a hack, but it works.) This routine takes several
 --hours on a standard laptop.
 --ThisFile must be the path to this file, so that "load ThisFile" loads this file.
-allSmooth = {ThisFile=>"democratic"} >> o -> (L) -> (
+allSmooth = {ThisFile=>"democratic"} >> o -> L -> (
 	M2exec := commandLine#0; --name of M2 executable
 	allFrames := subsets(#unique flatten L,4);
 	#(for frameNumber from 0 to #allFrames-1 list(
@@ -106,7 +106,7 @@ allSmooth = {ThisFile=>"democratic"} >> o -> (L) -> (
 
 		sm := run(M2exec | " -e '" | command | "'"); --run the computation in the child process, keep the exit code
 		if sm != 0 then break else true
-	)==#allFrames
+	))==#allFrames
 )
 
 

@@ -1,129 +1,142 @@
 dismiss "Elimination" --avoid shadowing warning
 loadPackage "MultiprojectiveVarieties"
 
---Throughout, P denotes a 3 x n matrix, representing a (family of) arrangements of n points in PP^2
---i's denotes a subset of {0,...,n-1}.
+--Code used in Section 4 of the paper.
+--Throughout, R will denote the coordinate ring of a product projective space with appropriate grading 
+--M denotes a r x n matrix, representing a (family of) arrangements of n points in PP^(r-1)
+--"frame" denotes a subset of {0...n-1} of size r+1, a choice of points in the arrangement to fix
 
---ideal representing the condition that the points indexed by i's all coincide
-pointsCollide = (P,i's) -> sum (for p in drop(i's,1) list minors (2,submatrix(P,{first i's, p})))
+needsPackage "MultiprojectiveVarieties";
+
+k = ZZ/65357
+
+--An r by r+1 table representing the standard frame, e.g. {{1,0,0},{0,1,0},{0,0,1},{1,1,1}} for r=3
+standardFrame = r -> transpose (entries diagonalMatrix(toList(r:1)) | {toList(r:1)})
+
+--Given the coordinate ring of (PP^(r-1))^n, returns the r by n matrix of the coordinate functions
+coordinateMatrix = R -> rsort matrix transpose values partition(degree, gens R)
+
+--Given (PP^(r-1))^n and a choice of points to fix, returns the map to the coordinate ring of (PP^(r-1))
+--fixing those points to the standard frame
+projectiveFrame = (R,frame) -> (
+	M := coordinateMatrix R;
+	exclude := flatten entries submatrix(M,frame);
+	include := select(gens R,x->not member(x,exclude));
+	newDegrees := entries submatrix(matrix(include / degree),select(0..9,i->not member(i,frame)));
+	S := k[include,Degrees => newDegrees];
+	vars := for x in gens S list (R_(toString x) => x);
+	constants := for p in transpose {exclude,flatten standardFrame numrows M} list p#0=>p#1;
+	map(S,R,vars|constants)
+)
+
+
+--Given the coordinate ring of any product of projective spaces, return a list of the
+--standard affine charts given as maps to an (ungraded) polynomial ring
+affineCharts = R -> (
+	A := k[y_1..y_(#gens R-#unique degrees R)];
+	charts := fold(
+		for d in unique degrees R list (for x in select(gens R,x->degree x == d) list x),
+		tensor
+	)/deepSplice;
+	for chart in charts list (
+		vars := select(gens R,x->not member(x,chart));
+		varsmap := for p in transpose {vars,gens A} list p#0 => p#1;
+		constantmap := for x in chart list x=>1;
+		map(A,R,varsmap|constantmap)
+	)
+)
+
+--Given a homogeneous ideal I of a graded polynomial ring (generated in degree 1),
+--return a map to another such ring with variables appearing in a linear generator 
+--of I eliminated, together with the image of I
+removeLinear = I -> (
+	linGens := select(flatten entries mingens I,x->sum degree x == 1);
+	elims := linGens/leadMonomial;
+	vars := select(gens ring I,x->not member(x,elims));
+	S := k[vars,Degrees=>vars/degree];
+	varsMap := for x in vars list x=>S_(toString x);
+	elimMap := for gen in linGens list 
+		leadMonomial(gen)=>sub(leadMonomial(gen)-1/leadCoefficient(gen)*gen,varsMap|for x in elims list x=>0);
+	phi := map(S,ring I,varsMap|elimMap);
+	(phi,ideal mingens phi(I))
+)
+
+----------------------------------------------------------
+
+--Now we take r=3. L denotes a configuration as a list of lines (themselves sublists of {0,...,n})
+
+--ideal representing the condition that the points indexed by pts all coincide
+pointsCollide = (M,pts) -> sum (for p in drop(pts,1) list minors (2,submatrix(M,{first pts, p})))
 
 --any k points collide
-anyPointsCollide = (P,k) -> intersect (for i's in subsets(numcols P,k) list pointsCollide(P,i's))
+anyPointsCollide = (M,k) -> intersect (for pts in subsets(numcols M,k) list pointsCollide(M,pts))
 
---points indexed by i's are collinear
-collinear = (P,i's) -> minors (3,submatrix (P,i's))
+--points indexed by pts are collinear
+collinear = (M,pts) -> minors (3,submatrix (M,pts))
 
 --any k points collinear
-anyCollinear = (P,k) -> intersect (for i's in subsets(numcols P,k) list collinear(P,i's))
+anyCollinear = (M,k) -> intersect (for pts in subsets(numcols M,k) list collinear(M,pts))
 
---complement of the stable locus (NOT of the semistable locus, which is different when 3|n)
-unstableLocus = P -> (
-	k := (numcols P - 1) // 3 + 1;
-	m :=  (2 * numcols P - 1) // 3 + 1;
-	intersect(anyPointsCollide (P,k), anyCollinear(P,m))
+--complement of the democratic stable locus (NOT of the semistable locus, which is different when 3|n)
+unstableLocus = M -> (
+	k := (numcols M - 1) // 3 + 1;
+	m :=  (2 * numcols M - 1) // 3 + 1;
+	intersect(anyPointsCollide (M,k), anyCollinear(M,m))
 )
 
 --For L a list of subsets of {0,...,n}, returns the ideal that those subsets of points are collinear
---When P is a projectiveFrame, this is the ideal of the variety X_i
-linesIdeal = (P,L) -> sum apply(L,l->collinear(P,l))
+--When M is a projectiveFrame, this is the ideal of the variety X_i in the paper
+linesIdeal = (M,L) -> sum apply(L,l->collinear(M,l))
 
---returns a 3 x n matrix with coefficients in the coordinate ring of (PP^2)^(n-4)
---the columns in i's are fixed to standard coordinates, others are coordinate variables
-projectiveFrame = {Field => ZZ/65357} >> o -> (n,i's) -> (
-	R := ring projectiveVariety(toList((n-4):2),o.Field); 		--(PP^2)^(n-4)
-        standard := {{1,0,0},{0,1,0},{0,0,1},{1,1,1}};			
-        matrix table(3,n,(j,i) ->
-                if any(i's,k->k==i)
-                then standard#(position(i's,k->k==i))#j
-                else R_(3*(i-number(i's,k->k<i))+j)
-        )
-)
 
---Returns a list of 3 x n matrices, each representing the restriction of
---projectiveFrame(n,i's) to a standard affine chart of (PP^2)^(n-4)
-affineCharts = {Field => ZZ/65357} >> o -> (n,i's) -> (
-	P := projectiveFrame(n,i's,Field=>o.Field);
-	R := ring P;
-	A := o.Field[a_0..a_(2*(n-4)-1)];
-	
-	affineChart = chart -> (
-		k := 0;
-		sub(P,for i from 0 to 3*(n-4)-1 list 
-			(R_i => if (i%3) == chart#(i//3) then 1 else (k = k+1; A_(k-1))))
-	);
-	for chart in (n-4:0)..(n-4:2) list affineChart(chart)
-)
 
---when P is one of the matrices returned by affineCharts and L is a list of subsets of {0,...,n},
---returns true if the singular locus of the corresponding affine chart of X_i is smooth
-stableIsSmooth = (P,L) -> (
-	I := linesIdeal(P,L);
-	1 % I == 0 or (
-		S := singularLocus linesIdeal(P,L); --singular locus of X_i
-		uns:= unstableLocus(sub(P,S));      --unstable locus of X_i
-		uns == 0 or isSubset(uns,radical ideal 0_S)  --singular locus contained in unstable locus
-	)
-)
-
---Checks that all X_i's are either empty or irreducible.
---Verbose => true prints each frame with the number of components
-allIrreducible = {Field=>ZZ/65357,Verbose=>false} >> o -> L -> (
-	n := #unique(flatten L);
-	all (subsets(n,4), i's->(
-		if o.Verbose then print i's;
-		X := projectiveVariety linesIdeal (projectiveFrame(n,i's,Field=>o.Field),L);
-		comps = #decompose X;
-		if o.Verbose then print comps;
-		comps <= 1
+--Returns true if the projective variety defined by linesIdeal is smooth, checked in affine charts.
+isSmooth = (M,L) -> (
+	acs := affineCharts(ring M);
+	all(acs,ch -> (
+		M' := ch(M);
+		I := linesIdeal(M',L);
+		if dim I < 0 then true else (
+			Sing := singularLocus I;
+			uns := unstableLocus(sub(M',Sing));
+			uns == 0 or isSubset(uns,radical ideal 0_Sing)
 		)
-	)
+	))
 )
 
---Checks that stableIsSmooth returns true for every affine chart of the frame i's
-frameSmooth = {Field=>ZZ/65357} >> o -> (L,i's) -> (
-	n := #unique(flatten L);
-	sm := all(affineCharts(n,i's,Field=>o.Field),P->stableIsSmooth(P,L))
+--Returns true if the democratic weak realization space is smooth and irreducible, checked frame by frame. (See Section 4.)
+--In each frame, we reduce the dimension of the ambient space by eliminating linear generators of linesIdeal.
+allSmoothAndIrreducible = {Verbose => true} >> o -> L -> (
+	R := ring projectiveVariety(toList(#unique L:2),k);
+	allFrames := subsets(#unique L,4);
+	goodFrames := for i from 0 to #allFrames-1 list (
+		frame := allFrames#i;
+		if o.Verbose then print ("Frame "|(i+1)|"/"|#allFrames|" : "|toString(frame));
+		phi := projectiveFrame(R,frame);
+		M := phi(coordinateMatrix(R));
+		(psi,I) := removeLinear(linesIdeal(M,L));
+		comps := #decompose projectiveVariety I;
+		if comps > 1 then (if o.Verbose then print "reducible";break) else 
+		if comps == 0 then (if o.Verbose then print "empty"; frame) else(
+			if o.Verbose then print "irreducible";
+			if isSmooth(psi(M),L) then (if o.Verbose then print "smooth";frame)
+			else (if o.Verbose then print "singular";break)
+		)
+	); 
+	goodFrames == allFrames
 )
 
---Checks that frameSmooth returns true for all frames.
---Becaues Macaulay2 hashes mutable objects by incrementing a counter, creating too many
---causes an overflow. To prevent this, we create a new Macaulay2 process for each frame,
---which resets the counter. The result for that frame is passed back to the parent process
---via exit code. (This is undoubtably a bit of a hack, but it works.) This routine takes several
---hours on a standard laptop.
---ThisFile must be the path to this file, so that "load ThisFile" loads this file.
-allSmooth = {ThisFile=>"democratic"} >> o -> L -> (
-	M2exec := commandLine#0; --name of M2 executable
-	allFrames := subsets(#unique flatten L,4);
-	#(for frameNumber from 0 to #allFrames-1 list(
-		i's := allFrames#frameNumber;
-		print("\n\nFrame " | (frameNumber+1) | "/" | #allFrames | ":" | toString(i's) | "\n\n");
-
-		--the command to run in the child process:
-		--load "democratic"; if frameSmooth(L,i's) then (print true; exit 0) else (print false; exit 1)
-		command := "load \"" | o.ThisFile | "\"; if frameSmooth(" | toString(L) | "," | toString(i's) | 
-			") then (print true; exit 0) else (print false;exit 1)";
-
-		sm := run(M2exec | " -e '" | command | "'"); --run the computation in the child process, keep the exit code
-		if sm != 0 then break else true
-	))==#allFrames
-)
-
-
+--The configuration from Sturmfels 1991
 L1 = {{1,2,4},{1,3,8},{1,7,9},{2,3,7},{2,5,9},{3,5,0},{4,5,6},{4,8,0},{6,7,8},{6,9,0}}
 
---All 10_3 configurations, per Schroeter 1889. L1 is isomorphic to KV.
---
+--All 10_3 configurations, per Schroeter 1889. L1 is isomorphic to KV via  {0,...,9}->{4, 7, 0, 6, 5, 9, 2, 3, 1, 8}	
 KI    = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,5,8},{2,6,9},{3,7,9},{4,6,0},{5,7,0}} --Desargues
 KII   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,6,9},{3,5,9},{4,6,0},{5,7,0}}
 KIII  = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,6,8},{2,7,9},{3,5,9},{4,6,0},{5,7,0}} 
-KIV   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,6,8},{2,5,9},{3,7,9},{4,6,0},{5,7,0}} --not realizable in char 0
+KIV   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,6,8},{2,5,9},{3,7,9},{4,6,0},{5,7,0}} --not realizable in characteristic 0
 KV    = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,5,9},{4,6,9},{3,6,0},{5,7,0}}
 KVI   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,6,9},{5,7,9},{3,5,0},{4,6,0}}
 KVII  = {{1,2,3},{1,4,5},{1,6,7},{2,8,9},{4,8,0},{6,9,0},{5,7,8},{3,5,9},{7,3,0},{2,4,6}}
 KVIII = {{1,2,3},{1,4,5},{1,6,7},{3,8,9},{5,8,0},{7,9,0},{2,7,8},{6,5,9},{4,3,0},{2,4,6}}
 KIX   = {{1,2,3},{1,4,5},{1,6,7},{2,8,9},{4,8,0},{6,9,0},{5,7,8},{3,5,9},{2,7,0},{3,4,6}} --Typo in Shroeter p. 222: 279->270
 KX    = {{1,2,3},{1,4,5},{1,6,7},{3,8,9},{2,8,0},{7,9,0},{5,7,8},{6,5,9},{4,3,0},{2,4,6}}
-
---allIrreducible(L1);
---allSmooth(L1);

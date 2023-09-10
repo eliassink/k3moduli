@@ -1,6 +1,3 @@
-dismiss "Elimination" --avoid shadowing warning
-loadPackage "MultiprojectiveVarieties"
-
 --Code used in Section 4 of the paper.
 --Throughout, R will denote the coordinate ring of a product projective space with appropriate grading 
 --M denotes a r x n matrix, representing a (family of) arrangements of n points in PP^(r-1)

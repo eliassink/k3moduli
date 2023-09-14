@@ -1,0 +1,25 @@
+// L_I = {123,145,167,890,248,358,269,379,460,570}, Desargues' configuration
+
+k := RationalField();
+P1xP2<u,v,a,b,c> := DirectProduct(ProjectiveSpace(k,1),ProjectiveSpace(k,2));
+R := CoordinateRing(P1xP2);
+
+intersectLines := function(x1,x2,x3,x4)
+    return -Determinant(Matrix([x1,x2,x3]))*Vector(x4) \
+            + Determinant(Matrix([x1,x2,x4]))*Vector(x3);
+end function;
+
+X1 := Vector(R,[1,0,0]);
+X2 := Vector(R,[0,1,0]);
+X4 := Vector(R,[0,0,1]);
+X7 := Vector(R,[1,1,1]);
+X0 := Vector([a,b,c]);
+X3 := Vector([u,v,0]);
+
+X5 := intersectLines(X1,X4,X7,X0);
+X6 := intersectLines(X1,X7,X4,X0);
+X8 := intersectLines(X2,X4,X3,X5);
+X9 := intersectLines(X2,X6,X3,X7);
+
+"Equation from construction sequence:";
+Determinant(Matrix([X8,X9,X0])); 

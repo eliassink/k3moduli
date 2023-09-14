@@ -1,4 +1,4 @@
-//L_VIII = {123,145,167,389,580,790,278,659,430,246}
+// L_VIII = {123,145,167,389,580,790,278,659,430,246}
 
 k := RationalField();
 P1xP2<u,v,a,b,c> := DirectProduct(ProjectiveSpace(k,1),ProjectiveSpace(k,2));
@@ -28,6 +28,10 @@ f := Determinant(Matrix([X5,X8,X0]));
 "Equation from construction series:";
 f;
 S:=Surface(P1xP2,f);
+
+"\nSingular points:";
+PrimeComponents(SingularSubscheme(S));
+
 "\nOnly Du Val singularities:";
 HasOnlySimpleSingularities(S);
 

@@ -1,0 +1,51 @@
+k := RationalField();
+P1xP2<u,v,a,b,c> := DirectProduct(ProjectiveSpace(k,1),ProjectiveSpace(k,2));
+R := CoordinateRing(P1xP2);
+K<t> := FunctionField(k);
+P2K<x,y,z> := ProjectiveSpace(K,2);
+gen := hom<R->CoordinateRing(P2K)|[t,1,x,y,z]>;
+
+intersectLines := function(x1,x2,x3,x4)
+    return -Determinant(Matrix([x1,x2,x3]))*Vector(x4) \
+            + Determinant(Matrix([x1,x2,x4]))*Vector(x3);
+end function;
+
+X1 := Vector(R,[1,0,0]);
+X2 := Vector(R,[0,1,0]);
+X4 := Vector(R,[0,0,1]);
+X7 := Vector(R,[1,1,1]);
+X9 := Vector([a,b,c]);
+X3 := Vector([u,v,0]);
+
+X6 := intersectLines(X2,X4,X1,X7);
+X5 := intersectLines(X1,X4,X6,X9);
+X8 := intersectLines(X2,X7,X3,X9);
+X0 := intersectLines(X3,X4,X7,X9);
+
+f := Determinant(Matrix([X5,X8,X0]));
+"Equation from construction series:";
+f;
+S:=Surface(P1xP2,f);
+"\nOnly Du Val singularities:";
+HasOnlySimpleSingularities(S);
+
+E := Curve(P2K,gen(f));
+E1,e1 := EllipticCurve(E,E![0,0,1]);
+"\nWeierstrass form:";
+E1;
+
+s:=E![t,1,t];
+"\nOrder of s=[t,1,t] (0 means infinity):";
+Order(e1(s));
+
+MWtors,i := TorsionSubgroup(E1);
+"\nOrder of torsion subgroup of MW group:";
+Order(MWtors);
+"\nTorsion section:";
+i(MWtors.2);
+
+"\nKodaira fibers:";
+KodairaSymbols(E1);
+
+"\nHeight pairing:";
+HeightPairing(e1(s),e1(s));

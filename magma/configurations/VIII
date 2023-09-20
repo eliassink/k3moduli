@@ -45,8 +45,8 @@ s:=E![t,1,t];
 Order(e1(s));
 
 MWtors,i := TorsionSubgroup(E1);
-"\nOrder of torsion subgroup of MW group:";
-Order(MWtors);
+"\nTorsion subgroup of MW group over Q:";
+MWtors;
 "\nTorsion section:";
 i(MWtors.2);
 

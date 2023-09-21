@@ -26,7 +26,7 @@ X8 := intersectLines(X2,X7,X3,X9);
 X0 := intersectLines(X3,X4,X7,X9);
 
 f := Determinant(Matrix([X5,X8,X0]));
-"Equation from construction series:";
+"\nEquation from construction series:";
 f;
 S:=Surface(P1xP2,f);
 

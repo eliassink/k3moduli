@@ -28,3 +28,4 @@ Matrix([X0,X1,X2,X3,X4,X5,X6,X7,X8,X9]);
 
 "Equation from construction series:";
 Determinant(Matrix([X8,X9,X0])); //identically 0
+"The realization space is an open subset of the ambient space, P^1 x P^2.";

@@ -1,18 +1,19 @@
-//Compute the singular locus of S
 k<r> := QuadraticField(-7);
 P1 := ProjectiveSpace(k,1);
 P2 := ProjectiveSpace(k,2);
 P1xP2<u,v,a,b,c>,pi := DirectProduct(P1,P2);
+
 f := u^2*a^2*c - u*v*a^2*c - v^2*b^3 + u*v*b^2*c \
-+ v^2*a*b^2 - u*v*a*b*c + u*v*a*c^2 - u^2*a*c^2;
++ v^2*a*b^2 - u*v*a*b*c + u*v*a*c^2 - u^2*a*c^2;          //Sturmfels' equation
 S := Surface(P1xP2,f);
+
 "Singualar points of S with coordinates ([u:v],[a:b:c]).";
 "They are ([1:1],[1:1:1]),([1:1],[0:0:1]),([1:1],[1:0:0]),";
 "([0:1],[1:0:1]),([0:1],[0:0:1]),([0:1],[1:0:0]),([1:0],[0:1:0]).";
 PrimeComponents(SingularSubscheme(S)); //singular points of S
 
 
-"\nS has only du Val singularities?";
+"\nS has only du Val singularities:";
 HasOnlySimpleSingularities(S);
 
 "\nDu Val types of each singular point:";
@@ -37,4 +38,4 @@ fc := Derivative(f,c);
 "\nSingular points of fibers of the projection pi: ([u:v],[a:b:c]) -> [u:v].";
 "One over [0:1], one over [(31+3*r):32] and its conjugate where r=sqrt(-7),";
 "three over [1:1], one over [1:0].";
-PrimeComponents(Scheme(P1xP2,[fa,fb,fc])); //singular points of fibers
+PrimeComponents(Scheme(P1xP2,[fa,fb,fc]));

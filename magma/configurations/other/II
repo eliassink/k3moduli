@@ -28,4 +28,5 @@ f := Determinant(Matrix([X8,X9,X0]));
 f;
 "\nComponents:";
 PrimaryComponents(Scheme(P1xP2,f));
-"First component has 249 collinear, third has 379 collinear."
+"The first component has 249 collinear, the third has 379 collinear."
+"The realization space is an open subset of the second component, a rational ruled surface.";

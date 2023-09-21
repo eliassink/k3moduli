@@ -16,15 +16,19 @@ X4 := Vector(R,[0,0,1]);
 X7 := Vector(R,[1,1,1]);
 X9 := Vector([a,b,c]);
 X3 := Vector([u,v,0]);
+
 X6 := intersectLines(X2,X9,X1,X7);
 X5 := intersectLines(X1,X4,X3,X9);
 X8 := intersectLines(X2,X4,X3,X7);
 X0 := intersectLines(X4,X6,X5,X7);
+
 "\nCoordinate matrix from construction series:";
 Matrix([X0,X1,X2,X3,X4,X5,X6,X7,X8,X9]);
+
 f := Determinant(Matrix([X8,X9,X0]));
 "\nEquation from construction series:";
 f;
+
 "\nComponents:";
 PrimaryComponents(Scheme(P1xP2,f));
 "The first component has 249 collinear, the third has 379 collinear.";

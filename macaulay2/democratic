@@ -1,4 +1,14 @@
---Code used in Section 4 of the paper.
+--Computation A.5. To run, load the file in Macaulay2 and input
+--allSmoothAndIrreducible(LV)
+--allSmoothAndIrreducible(LVIII)
+--allSmoothAndIrreducible(LIX)
+--allSmoothAndIrreducible(LX)
+--Note that each configuration takes about 2 hours on a standard laptop. 
+--For less verbose output, use e.g.
+--allSmoothAndIrreducible(LV,Verbose=>false)
+
+-----------------------------------------------------------------------------------------------------
+
 --Throughout, R will denote the coordinate ring of a product projective space with appropriate grading 
 --M denotes a r x n matrix, representing a (family of) arrangements of n points in PP^(r-1)
 --"frame" denotes a subset of {0...n-1} of size r+1, a choice of points in the arrangement to fix
@@ -58,7 +68,7 @@ removeLinear = I -> (
 	(phi,ideal mingens phi(I))
 )
 
-----------------------------------------------------------
+-------------------------------------------------------------------------------------------------
 
 --Now we take r=3. L denotes a configuration as a list of lines (themselves sublists of {0,...,n})
 
@@ -133,11 +143,6 @@ LV    = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,5,9},{4,6,9},{3,6,0}
 LVI   = {{1,2,3},{1,4,5},{1,6,7},{8,9,0},{2,4,8},{3,7,8},{2,6,9},{5,7,9},{3,5,0},{4,6,0}}
 LVII  = {{1,2,3},{1,4,5},{1,6,7},{2,8,9},{4,8,0},{6,9,0},{5,7,8},{3,5,9},{7,3,0},{2,4,6}}
 LVIII = {{1,2,3},{1,4,5},{1,6,7},{3,8,9},{5,8,0},{7,9,0},{2,7,8},{6,5,9},{4,3,0},{2,4,6}}
-LIX   = {{1,2,3},{1,4,5},{1,6,7},{2,8,9},{4,8,0},{6,9,0},{5,7,8},{3,5,9},{2,7,0},{3,4,6}} --Typo in Shroeter p. 222: 279->270
+LIX   = {{1,2,3},{1,4,5},{1,6,7},{2,8,9},{4,8,0},{6,9,0},{5,7,8},{3,5,9},{2,7,0},{3,4,6}}
 LX    = {{1,2,3},{1,4,5},{1,6,7},{3,8,9},{2,8,0},{7,9,0},{5,7,8},{6,5,9},{4,3,0},{2,4,6}}
 
---Computation A.5 (takes a few hours per configuration) 
---allSmoothAndIrreducible(LV)
---allSmoothAndIrreducible(LVIII)
---allSmoothAndIrreducible(LIX)
---allSmoothAndIrreducible(LX)

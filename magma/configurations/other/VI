@@ -1,0 +1,35 @@
+"Configuration VI";
+[123,145,167,890,248,378,269,579,350,460];
+
+k := RationalField();
+P1xP2<u,v,a,b,c> := DirectProduct(ProjectiveSpace(k,1),ProjectiveSpace(k,2));
+R := CoordinateRing(P1xP2);
+
+intersectLines := function(x1,x2,x3,x4)
+    return -Determinant(Matrix([x1,x2,x3]))*Vector(x4) \
+            + Determinant(Matrix([x1,x2,x4]))*Vector(x3);
+end function;
+
+X1 := Vector(R,[1,0,0]);
+X2 := Vector(R,[0,1,0]);
+X4 := Vector(R,[0,0,1]);
+X7 := Vector(R,[1,1,1]);
+X9 := Vector([a,b,c]);
+X3 := Vector([u,v,0]);
+
+X5 := intersectLines(X1,X4,X7,X9);
+X6 := intersectLines(X1,X7,X2,X9);
+X8 := intersectLines(X2,X4,X3,X7);
+X0 := intersectLines(X3,X5,X8,X9);
+
+"\nCoordinate matrix from construction series:";
+Matrix([X0,X1,X2,X3,X4,X5,X6,X7,X8,X9]);
+
+f := Determinant(Matrix([X4,X6,X0]));
+"\nEquation from construction series:";
+f;
+
+"\nComponents";
+PrimaryComponents(Scheme(P1xP2,f));
+"The first component has 240 collinear, the third has 370 collinear.";
+"The realization space is an open subset of the second component, a rational ruled surface.";

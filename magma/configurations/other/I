@@ -1,6 +1,5 @@
-LI := [123,145,167,890,248,358,269,379,460,570] 
 "Configuration I (Desargues' configuration)";
-LI;
+[123,145,167,890,248,358,269,379,460,570];
 
 k := RationalField();
 P1xP2<u,v,a,b,c> := DirectProduct(ProjectiveSpace(k,1),ProjectiveSpace(k,2));

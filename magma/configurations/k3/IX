@@ -1,4 +1,5 @@
-// L_IX   = {123,145,167,289,480,690,578,359,270,346}
+"Configuration IX";
+[123,145,167,289,480,690,578,359,270,346];
 
 k := RationalField();
 P1xP2<u,v,a,b,c> := DirectProduct(ProjectiveSpace(k,1),ProjectiveSpace(k,2));
@@ -18,13 +19,14 @@ X4 := Vector(R,[0,0,1]);
 X7 := Vector(R,[1,1,1]);
 X9 := Vector([a,b,c]);
 X3 := Vector([u,v,0]);
+
 X5 := intersectLines(X1,X4,X3,X9);
 X6 := intersectLines(X1,X7,X3,X4);
 X8 := intersectLines(X5,X7,X2,X9);
 X0 := intersectLines(X2,X7,X4,X8);
 
 f := Determinant(Matrix([X6,X9,X0]));
-"Equation from construction series:";
+"\nEquation from construction series:";
 f;
 S:=Surface(P1xP2,f);
 

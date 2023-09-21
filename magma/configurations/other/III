@@ -1,6 +1,5 @@
-LIII := [123,145,167,890,248,368,279,359,460,570];
 "Configuration III";
-LIII;
+[123,145,167,890,248,368,279,359,460,570];
 
 k := RationalField();
 P1xP2<u,v,a,b,c> := DirectProduct(ProjectiveSpace(k,1),ProjectiveSpace(k,2));

@@ -1,5 +1,5 @@
 LI := [123,145,167,890,248,358,269,379,460,570] 
-"Configuration: I (Desargues' configuration)";
+"Configuration I (Desargues' configuration)";
 LI;
 
 k := RationalField();

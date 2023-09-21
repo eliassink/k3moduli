@@ -1,4 +1,4 @@
-//Computations in the Mordell-Weil group for configuration L_V (Sections 2 and 3)
+//Computation A.2
 
 K<t> := FunctionField(RationalField());
 KP2<a,b,c> := ProjectiveSpace(K,2);

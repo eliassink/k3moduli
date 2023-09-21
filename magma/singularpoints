@@ -1,41 +1,34 @@
-k<r> := QuadraticField(-7);
-P1 := ProjectiveSpace(k,1);
-P2 := ProjectiveSpace(k,2);
-P1xP2<u,v,a,b,c>,pi := DirectProduct(P1,P2);
+//Computation A.2
 
-f := u^2*a^2*c - u*v*a^2*c - v^2*b^3 + u*v*b^2*c \
-+ v^2*a*b^2 - u*v*a*b*c + u*v*a*c^2 - u^2*a*c^2;          //Sturmfels' equation
-S := Surface(P1xP2,f);
+K<t> := FunctionField(RationalField());
+KP2<a,b,c> := ProjectiveSpace(K,2);
+f := t^2*a^2*c - t*a^2*c - b^3 + t*b^2*c \
++ a*b^2 - t*a*b*c + t*a*c^2 - t^2*a*c^2;     //Sturmfels' equation, t=u/v
+E := Curve(KP2,f);                           //generic fiber of S
+o := E![1,1,1];                              //identity section
+s := E![1,t,t];                              //section in Prop. 2.1
+E1,e1 := EllipticCurve(E,o);                 
 
-"Singualar points of S with coordinates ([u:v],[a:b:c]).";
-"They are ([1:1],[1:1:1]),([1:1],[0:0:1]),([1:1],[1:0:0]),";
-"([0:1],[1:0:1]),([0:1],[0:0:1]),([0:1],[1:0:0]),([1:0],[0:1:0]).";
-PrimeComponents(SingularSubscheme(S)); //singular points of S
+"\nWeierstrass form:";
+E1;                                          //Weierstrass form of E
 
+"\nOrder of s=[1:t:t] in E(K) (where 0 means infinity):";
+Order(e1(s));
 
-"\nS has only du Val singularities:";
-HasOnlySimpleSingularities(S);
+MWtors,i := TorsionSubgroup(E1); //Torsion subgroup with inclusion into E
+r := -i(MWtors.1);                //Torsion generator
 
-"\nDu Val types of each singular point:";
-S![1,1,1,1,1];
-IsSimpleSurfaceSingularity(S![1,1,1,1,1]);
-S![1,1,0,0,1];
-IsSimpleSurfaceSingularity(S![1,1,0,0,1]);
-S![1,1,1,0,0];
-IsSimpleSurfaceSingularity(S![1,1,1,0,0]);
-S![0,1,1,0,1];
-IsSimpleSurfaceSingularity(S![0,1,1,0,1]);
-S![0,1,0,0,1];
-IsSimpleSurfaceSingularity(S![0,1,0,0,1]);
-S![0,1,1,0,0];
-IsSimpleSurfaceSingularity(S![0,1,1,0,0]);
-S![1,0,0,1,0];
-IsSimpleSurfaceSingularity(S![1,0,0,1,0]);
+"\nTorsion section:";
+r;
 
-fa := Derivative(f,a);
-fb := Derivative(f,b);
-fc := Derivative(f,c);
-"\nSingular points of fibers of the projection pi: ([u:v],[a:b:c]) -> [u:v].";
-"One over [0:1], one over [(31+3*r):32] and its conjugate where r=sqrt(-7),";
-"three over [1:1], one over [1:0].";
-PrimeComponents(Scheme(P1xP2,[fa,fb,fc]));
+"\nKodaira fibers:";
+KodairaSymbols(E1);                          //The Kodaira fibers of our K3 surface
+
+"\nTorsion subgroup of MW group:";
+MWtors;                                   
+
+"\nHeight pairing <s,s> is:";
+HeightPairing(e1(s),e1(s));                        //The height pairing required to compute the regulator of E, 7/8
+
+"\nIsomorphic to universal elliptic curve over Gamma_1(7)?";
+IsIsomorphic(EllipticCurve([t,-(t-1)^2*t,-(t-1)^2*t^2,0,0]),E1);  //Sanity check, cf. row 2 of Table 3 in [Lec15]

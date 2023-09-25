@@ -23,7 +23,7 @@ standardFrame = r -> transpose (entries diagonalMatrix(toList(r:1)) | {toList(r:
 --Given the coordinate ring of (PP^(r-1))^n, returns the r by n matrix of the coordinate functions
 coordinateMatrix = R -> rsort matrix transpose values partition(degree, gens R)
 
---Given (PP^(r-1))^n and a choice of points to fix, returns the map to the coordinate ring of (PP^(r-1))
+--Given (PP^(r-1))^n and a choice of points to fix, returns the map to the coordinate ring of (PP^(r-1))^(n-4)
 --fixing those points to the standard frame
 projectiveFrame = (R,frame) -> (
 	M := coordinateMatrix R;

@@ -42,7 +42,7 @@ projectiveFrame = (R,frame) -> (
 affineCharts = R -> (
 	A := k[y_1..y_(#gens R-#unique degrees R)];
 	charts := fold(
-		for d in unique degrees R list (for x in select(gens R,x->degree x == d) list x),
+		for d in unique degrees R list (select(gens R,x->degree x == d)),
 		tensor
 	)/deepSplice;
 	for chart in charts list (

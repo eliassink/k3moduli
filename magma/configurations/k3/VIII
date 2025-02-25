@@ -25,13 +25,22 @@ X5 := intersectLines(X1,X4,X6,X9);
 X8 := intersectLines(X2,X7,X3,X9);
 X0 := intersectLines(X3,X4,X7,X9);
 
+"\nCoordinates of points 1,2,...,9,0:";
+X1;X2;X3;X4;X5;X6;X7;X8;X9;X0;
+
 f := Determinant(Matrix([X5,X8,X0]));
-"\nEquation from construction series:";
+"\nEquation for collinearity of 580:";
 f;
 S:=Surface(P1xP2,f);
 
+"\nIrreducible?";
+IsIrreducible(S);
+
 "\nSingular points:";
 PrimeComponents(SingularSubscheme(S));
+
+"u-v=0, u=0, v=0 give bad collinearities 347, 234, 134, respectively,\ 
+so the singular locus is disjoint from the realization space.";
 
 "\nOnly Du Val singularities:";
 HasOnlySimpleSingularities(S);
@@ -42,17 +51,21 @@ E1,e1 := EllipticCurve(E,E![0,0,1]);
 E1;
 
 s:=E![t,1,t];
-"\nOrder of s=[t,1,t] (0 means infinity):";
+"\nSection s given by [a,b,c]=[t,1,t] has order:";
 Order(e1(s));
+"Not torsion.";
 
 MWtors,i := TorsionSubgroup(E1);
 "\nTorsion subgroup of MW group over Q:";
 MWtors;
-"\nTorsion section:";
+"\nTorsion section r:";
 i(MWtors.2);
+"In the Weierstrass form y=x(x^2+a(t)x+b(t)) above, we have b(t)<=0 if t>=0, \
+so x=0 is the middle root. If t<=0, then a(t),b(t)>=0, so x=0 is the smallest 
+root. Hence (x,y)=(0,0) lies in the non-identity component of every smooth fiber.";
 
-"\nKodaira fibers:";
+"\nSingular fibers:";
 KodairaSymbols(E1);
 
-"\nHeight pairing:";
+"\nHeight pairing <s,s>:";
 HeightPairing(e1(s),e1(s));

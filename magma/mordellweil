@@ -9,11 +9,12 @@ o := E![1,1,1];                              //identity section
 s := E![1,t,t];                              //section in Prop. 2.1
 E1,e1 := EllipticCurve(E,o);                 
 
-"\nWeierstrass form:";
+"Weierstrass form:";
 E1;                                          //Weierstrass form of E
 
-"\nOrder of [1:t:t] in E(K) (where 0 means infinity):";
+"\nOrder of section s in E(K) (see Prop 2.1):";
 Order(e1(s));
+"Not torsion.";
 
 MWtors,i := TorsionSubgroup(E1); //Torsion subgroup with inclusion into E
 r := -i(MWtors.1);                //Torsion generator

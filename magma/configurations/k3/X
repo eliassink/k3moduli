@@ -25,13 +25,18 @@ X3 := intersectLines(X4,X0,X1,X2);
 X9 := intersectLines(X6,X5,X7,X0);
 X8 := intersectLines(X5,X7,X3,X9);
 
+"\nCoordinates of points 1,2,...,9,0:";
+X1;X2;X3;X4;X5;X6;X7;X8;X9;X0;
+
 f := Determinant(Matrix([X2,X8,X0]));
-"\nEquation from construction series:";
+"\nEquation for collinearity of 280:";
 f;
 S:=Surface(P1xP2,f);
 
 "\nSingular points:";
 PrimeComponents(SingularSubscheme(S));
+"u-v=0, u=0, v=0 give bad collinearities 275, 245, 125, respectively,\ 
+so the singular locus is disjoint from the realization space.";
 
 "\nOnly Du Val singularities:";
 HasOnlySimpleSingularities(S);
@@ -42,17 +47,24 @@ E1,e1 := EllipticCurve(E,E![1,1,1]);
 E1;
 
 s:=E![-t,1,0];
-"\nOrder of s=[-t,1,0] (0 means infinity):";
+"\nSection s given by [a,b,c]=[-t,1,0]:";
+e1(s);
+"has order:";
 Order(e1(s));
+"Not torsion.";
 
 MWtors,i := TorsionSubgroup(E1);
 "\nTorsion subgroup of MW group over Q:";
 MWtors;
 "\nTorsion section:";
 i(MWtors.1);
+"One can check that for any t in (0.92,1), both s(t) and r(t) \
+lie in the identity component of the fiber. The same \
+occurs with the elliptic fibrations arising from other construction \
+sequences, so we cannot prove analytic density for this configuration.";
 
 "\nKodaira fibers:";
 KodairaSymbols(E1);
 
-"\nHeight pairing:";
+"\nHeight pairing <s,s>:";
 HeightPairing(e1(s),e1(s));

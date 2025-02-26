@@ -33,9 +33,6 @@ f := Determinant(Matrix([X5,X8,X0]));
 f;
 S:=Surface(P1xP2,f);
 
-"\nIrreducible?";
-IsIrreducible(S);
-
 "\nSingular points:";
 PrimeComponents(SingularSubscheme(S));
 
@@ -60,9 +57,6 @@ MWtors,i := TorsionSubgroup(E1);
 MWtors;
 "\nTorsion section r:";
 i(MWtors.2);
-"In the Weierstrass form y=x(x^2+a(t)x+b(t)) above, we have b(t)<=0 if t>=0, \
-so x=0 is the middle root. If t<=0, then b(t)>=0 and a(t)<=0, so x=0 is the smallest 
-root. Hence (x,y)=(0,0) lies in the non-identity component of every smooth fiber.";
 
 "\nSingular fibers:";
 KodairaSymbols(E1);

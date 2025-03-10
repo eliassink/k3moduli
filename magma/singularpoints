@@ -10,11 +10,14 @@ f := u^2*a^2*c - u*v*a^2*c - v^2*b^3 + u*v*b^2*c \
 S := Surface(P1xP2,f);
 
 "Singualar points of S with coordinates ([u:v],[a:b:c]).";
-"They are ([1:1],[1:1:1]),([1:1],[0:0:1]),([1:1],[1:0:0]),";
-"([0:1],[1:0:1]),([0:1],[0:0:1]),([0:1],[1:0:0]),([1:0],[0:1:0]).";
+
 PrimeComponents(SingularSubscheme(S)); //singular points of S
 
-
+"They are ([1:1],[1:1:1]),([1:1],[0:0:1]),([1:1],[1:0:0]),";
+"([0:1],[1:0:1]),([0:1],[0:0:1]),([0:1],[1:0:0]),([1:0],[0:1:0]).";
+"The first three have points 157 collinear in the corresponding arrangement, \
+while the middle three have 137 collinear, and the last has 127 collinear.";
+"Hence none lies in the realization space.";
 "\nS has only du Val singularities:";
 HasOnlySimpleSingularities(S);
 
